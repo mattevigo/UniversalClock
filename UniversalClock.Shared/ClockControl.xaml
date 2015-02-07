@@ -29,13 +29,13 @@
             </Path.RenderTransform>
         </Path>
 
-        <Path Data="M 0 10 L 0 -120" StrokeThickness="6" Stroke="{Binding ElementName=control, Path=Foreground}">
+        <Path Data="M 0 10 L 0 -150" StrokeThickness="6" Stroke="{Binding ElementName=control, Path=Foreground}">
             <Path.RenderTransform>
                 <RotateTransform x:Name="rtMinutes" Angle="0" />
             </Path.RenderTransform>
         </Path>
 
-        <Path Data="M 0 10 L 0 -75" StrokeThickness="6" Stroke="{Binding ElementName=control, Path=Foreground}">
+        <Path Data="M 0 10 L 0 -90" StrokeThickness="6" Stroke="{Binding ElementName=control, Path=Foreground}">
             <Path.RenderTransform>
                 <RotateTransform x:Name="rtHours" Angle="45" />
             </Path.RenderTransform>

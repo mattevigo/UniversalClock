@@ -54,13 +54,21 @@ namespace UniversalClock
             double angle = ((DateTime)e.NewValue).Second * 6;
 
  	        Debug.WriteLine("({0} -> {1}) Angle: {2}", e.OldValue, e.NewValue, angle);
-            ((ClockControl)d).daSecondsAnimation.To = angle;
+
+            ClockControl cc = (ClockControl)d;
             if(angle == 0)
             {
                 Debug.WriteLine("Zero!");
+                cc.daSecondsAnimation.From = 354;
+                cc.daSecondsAnimation.To = 360;
+            }
+            else if(angle >= 6)
+            {
+                cc.daSecondsAnimation.From = angle - 6;
+                cc.daSecondsAnimation.To = angle;
             }
 
-            ((ClockControl)d).sClockAnimation.Begin();
+            cc.sClockAnimation.Begin();
         }
 
         private void Canvas_Loaded(object sender, RoutedEventArgs e)
