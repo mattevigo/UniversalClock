@@ -1,0 +1,1 @@
+C:\Users\Matteo Vigoni\Documents\Visual Studio 2013\Projects\UniversalClock\UniversalClock\UniversalClock.Windows\UniversalClock.Windows.csproj;neutral
