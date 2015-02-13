@@ -51,7 +51,8 @@ namespace UniversalClock
 
         private static void Time_Callback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            double angle = ((DateTime)e.NewValue).Second * 6;
+            DateTime dt = (DateTime)e.NewValue;
+            double angle = CalculateSecondsAngle(dt);
 
  	        Debug.WriteLine("({0} -> {1}) Angle: {2}", e.OldValue, e.NewValue, angle);
 
@@ -59,13 +60,32 @@ namespace UniversalClock
             if(angle == 0)
             {
                 Debug.WriteLine("Zero!");
+
                 cc.daSecondsAnimation.From = 354;
                 cc.daSecondsAnimation.To = 360;
+
+                // Animazione Minuti
+                var mAngle = CalculateMinutesAngle((DateTime) e.NewValue);
+
+                Debug.WriteLine("Minutes: {0}, Angle: {1}", dt.Minute, mAngle);
+
+                cc.daMinutesAnimation.From = mAngle == 0 ? 354 : mAngle - 6;
+                cc.daMinutesAnimation.To = mAngle == 0 ? 360 : mAngle;
+
+                // Animazione Ore
+                var hAngle = CalculateHoursAngle(dt);
+
+                Debug.WriteLine("Hours: {0}, Angle: {1}", dt.Hour, hAngle);
+
+                cc.daHoursAnimation.From = hAngle == 0 ? 0 : cc.daHoursAnimation.From;
+                cc.daHoursAnimation.To = hAngle;  
             }
             else if(angle >= 6)
             {
                 cc.daSecondsAnimation.From = angle - 6;
                 cc.daSecondsAnimation.To = angle;
+
+                cc.daMinutesAnimation.From = cc.daMinutesAnimation.To;
             }
 
             cc.sClockAnimation.Begin();
@@ -73,6 +93,32 @@ namespace UniversalClock
 
         private void Canvas_Loaded(object sender, RoutedEventArgs e)
         {
+            // Posizione Lancette
+            var dt = DateTime.Now;
+
+            Debug.WriteLine("Inizializzazione orologio: {0}", dt);
+
+            var sAngle = CalculateSecondsAngle(dt);
+            var mAngle = CalculateMinutesAngle(dt);
+            var hAngle = CalculateHoursAngle(dt);
+
+            Debug.WriteLine("sAngle: {0}", sAngle);
+            Debug.WriteLine("mAngle: {0}", mAngle);
+            Debug.WriteLine("hAngle: {0}", hAngle);
+
+            daSecondsSetupAnimation.From = 0;
+            daSecondsSetupAnimation.To = sAngle;
+
+            daMinutesSetupAnimation.From = 0;
+            daMinutesSetupAnimation.To = mAngle;
+            daMinutesAnimation.To = mAngle;
+
+            daHoursSetupAnimation.From = 0;
+            daHoursSetupAnimation.To = hAngle;
+            daHoursAnimation.To = hAngle;
+
+            sClockSetupAnimation.Begin();
+
             DispatcherTimer t = new DispatcherTimer();
             t.Tick += t_Tick;
             t.Interval = new TimeSpan(0, 0, 1);
@@ -82,13 +128,27 @@ namespace UniversalClock
         void t_Tick(object sender, object e)
         {
             Debug.WriteLine("{0}", DateTime.Now);
-            Time = Time.Add(new TimeSpan(0, 0, 1));
+            //Time = Time.Add(new TimeSpan(0, 0, 1));
+            Time = DateTime.Now;
         }
 
-        private async void Tick(object state)
+        #region Calculation
+
+        private static double CalculateSecondsAngle(DateTime dt)
         {
-            //Debug.WriteLine("{0}", DateTime.Now);
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.High, () => { Time = Time.Add(new TimeSpan(0, 0, 1)); });
+            return dt.Second == 0 ? 0D : ((double)dt.Second) * 6;
         }
+
+        private static double CalculateMinutesAngle(DateTime dt)
+        {
+            return dt.Minute == 0 ? 0D : ((double)dt.Minute) * 6;
+        }
+
+        private static double CalculateHoursAngle(DateTime dt)
+        {
+            return (((double)dt.Hour) % 12) * 30 + (((double)dt.Minute) / 60) * 30;
+        }
+
+        #endregion
     }
 }

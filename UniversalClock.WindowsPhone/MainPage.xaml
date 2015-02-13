@@ -9,7 +9,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <StackPanel>
-        <local:ClockControl></local:ClockControl>
+        <local:ClockControl Width="400" HorizontalAlignment="Left"/>
     </StackPanel>
-    
+
 </Page>
