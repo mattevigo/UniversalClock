@@ -93,7 +93,7 @@ namespace UniversalClock
 
         private void Canvas_Loaded(object sender, RoutedEventArgs e)
         {
-            // Posizione Lancette
+            // Setup Lancette
             var dt = DateTime.Now;
 
             Debug.WriteLine("Inizializzazione orologio: {0}", dt);
@@ -119,6 +119,7 @@ namespace UniversalClock
 
             sClockSetupAnimation.Begin();
 
+            // Timer
             DispatcherTimer t = new DispatcherTimer();
             t.Tick += t_Tick;
             t.Interval = new TimeSpan(0, 0, 1);
@@ -146,7 +147,7 @@ namespace UniversalClock
 
         private static double CalculateHoursAngle(DateTime dt)
         {
-            return (((double)dt.Hour) % 12) * 30 + (((double)dt.Minute) / 60) * 30;
+            return ((((double)dt.Hour) % 12) + (((double)dt.Minute) / 60)) * 30;
         }
 
         #endregion
